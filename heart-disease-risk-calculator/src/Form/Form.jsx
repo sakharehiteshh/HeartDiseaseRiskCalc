@@ -38,7 +38,7 @@ const Form = () => {
             <h1>Heart Disease Risk Calculator</h1>
             <form onSubmit={handleSubmit}>
                 {[
-                    { label: 'Family History', name: 'familyHistory' },
+                    { label: 'Family History of Heart Disease', name: 'familyHistory' },
                     { label: 'Smoking', name: 'smoking' },
                     { label: 'Diabetes', name: 'diabetes' },
                     { label: 'High Blood Pressure', name: 'highBP' },
