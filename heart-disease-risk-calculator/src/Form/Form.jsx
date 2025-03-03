@@ -3,81 +3,71 @@ import './Form.css';
 
 const Form = () => {
     const [formData, setFormData] = useState({
-        familyHistory: false,
-        smoking: false,
-        diabetes: false,
-        highBP: false,
-        highCholesterol: false,
-        age: 0,
+        familyHistory: '',
+        smoking: '',
+        diabetes: '',
+        highBP: '',
+        highCholesterol: '',
+        age: '',
     });
     const [riskLevel, setRiskLevel] = useState('');
 
     const handleChange = (e) => {
-        const { name, type, checked, value } = e.target;
+        const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : value,
+            [name]: value,
         }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const highRisk =
-            formData.familyHistory ||
-            formData.smoking ||
-            formData.diabetes ||
-            formData.highBP ||
-            formData.highCholesterol ||
-            formData.age > 60;
+        const highRisk = 
+            formData.familyHistory === 'yes' ||
+            formData.smoking === 'yes' ||
+            formData.diabetes === 'yes' ||
+            formData.highBP === 'yes' ||
+            formData.highCholesterol === 'yes' ||
+            parseInt(formData.age) > 60;
 
-        setRiskLevel(highRisk ? 'High Risk' : 'Average Risk');
+        setRiskLevel(highRisk ? 'Higher than Average Risk' : 'Average Risk');
     };
 
     return (
         <div className="container">
             <h1>Heart Disease Risk Calculator</h1>
             <form onSubmit={handleSubmit}>
-                <label>
-                    <h2>Family History:</h2> 
-                    <input
-                        type="checkbox"
-                        name="familyHistory"
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    <h2>Smoking:</h2> 
-                    <input
-                        type="checkbox"
-                        name="smoking"
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    <h2>Diabetes:</h2>
-                    <input
-                        type="checkbox"
-                        name="diabetes"
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    <h2>High Blood Pressure:</h2>
-                    <input
-                        type="checkbox"
-                        name="highBP"
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                   <h2>High Cholesterol:</h2>
-                    <input
-                        type="checkbox"
-                        name="highCholesterol"
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
+                {[
+                    { label: 'Family History', name: 'familyHistory' },
+                    { label: 'Smoking', name: 'smoking' },
+                    { label: 'Diabetes', name: 'diabetes' },
+                    { label: 'High Blood Pressure', name: 'highBP' },
+                    { label: 'High Cholesterol', name: 'highCholesterol' }
+                ].map(({ label, name }) => (
+                    <div key={name} className="question">
+                        <h2>{label}:</h2>
+                        <label>
+                            <input
+                                type="radio"
+                                name={name}
+                                value="yes"
+                                onChange={handleChange}
+                                required
+                            /> Yes
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name={name}
+                                value="no"
+                                onChange={handleChange}
+                                required
+                            /> No
+                        </label>
+                    </div>
+                ))}
+
+                <div className="question">
                     <h2>Age:</h2>
                     <input
                         required
@@ -85,10 +75,13 @@ const Form = () => {
                         name="age"
                         onChange={handleChange}
                         min="0"
+                        placeholder="Enter your age"
                     />
-                </label>
+                </div>
+
                 <button type="submit">Calculate Risk</button>
             </form>
+
             {riskLevel && <h2>Risk Level: {riskLevel}</h2>}
         </div>
     );
